@@ -1,0 +1,11 @@
+{
+    "/api/*": {
+      "target": "https://controle-ponto-inteligente-api.herokuapp.com/api",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
+  }

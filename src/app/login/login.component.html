@@ -1,0 +1,17 @@
+<div class="center-menu" style="height: 370px; text-align: center">
+  <p style="margin: 0px">
+    <a>PONTO-VIRTUAL</a>
+  </p> 
+  <!-- <p style="margin: 0px">Ponto-Inteligente</p> 
+  <p style="margin: 0px; margin-bottom: 1em">Facilidades para o seu Negócio</p> -->
+  <mat-form-field style="width: 100%"> 
+    <input matInput  placeholder="E-Mail"  [(ngModel)]="email" >
+  </mat-form-field>
+  <mat-form-field style="width: 100%">
+    <input matInput placeholder="Senha" type="password"  [(ngModel)]="senha" >
+  </mat-form-field>
+  
+  <div mat-dialog-actions align="center">
+    <button  (click)="login()" mat-raised-button color="primary">Entrar</button>
+  </div>
+</div>

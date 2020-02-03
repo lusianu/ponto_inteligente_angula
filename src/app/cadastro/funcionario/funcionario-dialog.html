@@ -1,0 +1,48 @@
+
+<button mat-fab  mat-dialog-close style="float: right">
+    <mat-icon>close</mat-icon>
+  </button>
+  
+  <!-- <h1 *ngIf="!data.edicao" mat-dialog-title>Cadastro de Funcionário </h1>
+  <h1 *ngIf="data.edicao" mat-dialog-title>Edição de Funcionário </h1>  -->
+
+  <h1 mat-dialog-title>Cadastro de Funcionário </h1>
+  <!-- <h1 mat-dialog-title>Edição de Funcionário </h1> -->
+  
+  <div mat-dialog-content>
+    <!-- <mat-slide-toggle *ngIf="data.edicao">Ativo</mat-slide-toggle> -->
+  
+    <mat-form-field>
+      <input matInput placeholder="Nome"  [(ngModel)]="data.nome" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput  mask="000.000.000-00" placeholder="CPF" validate-cnpj [(ngModel)]="data.cpf" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Valor hora" type="number"  [(ngModel)]="data.valorHora" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Qtde horas trabalho dia" type="number"  [(ngModel)]="data.qtdHorasTrabalhoDia" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Qtde horas almoço dia" type="number"  [(ngModel)]="data.qtdHorasAlmoco" >
+    </mat-form-field>
+    <mat-form-field style="width:  350px;">
+        <input matInput placeholder="E-mail" type="email" [(ngModel)]="data.email" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Senha" type="password" [(ngModel)]="data.senha" >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Confirmar senha" type="password" [(ngModel)]="data.senhaConfirmacao" >
+    </mat-form-field>
+    
+    <!-- <mat-form-field>
+      <input matInput mask="00000-000" placeholder="CEP" (ngModelChange)="cepChanged($event)"  [(ngModel)]="data.cep" >
+    </mat-form-field> -->
+  </div>
+  <div mat-dialog-actions align="end">
+    <button  (click)="saveFuncionario()" mat-raised-button style="float: right" color="primary">SALVAR</button>
+  </div>
+  
+  
