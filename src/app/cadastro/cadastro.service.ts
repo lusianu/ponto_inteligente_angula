@@ -13,30 +13,14 @@ export class CadastroService {
 
     headers_object = new HttpHeaders({
       'Content-Type': 'application/json',
-       'Authorization': "Bearer "+localStorage.getItem("token")
+      'Authorization': "Bearer "+localStorage.getItem("token")
     });
 
     httpOptions = {
       headers: this.headers_object
     };
    
-  saveFuncionario(params): any {
-    
-    this.http.put<any>('https://controle-ponto-inteligente-api.herokuapp.com/api/funcionarios/1',params,this.httpOptions).subscribe((data:any
-    ) =>  {
-        this._snackBar.open( JSON.stringify(data), null, {
-        duration: 3000,
-        });
-      } ,
-      error => {
-        this._snackBar.open('Erro no servidor', null, {
-        duration: 3000,
-        });
-    });
-    return ;    
-  }
-
-  saveFuncionario2(){
+  saveFuncionario(){
 
     interface Data {
       data : any,
@@ -49,7 +33,7 @@ export class CadastroService {
     const url = '/api/empresas/cnpj/00000000000191';
 
     this.http.get(url, this.httpOptions).subscribe(
-        (data : Data) => {
+        (data : any) => {
             console.log(data);
             console.log(data.data.id);
             console.log(data.data.cnpj);
@@ -66,11 +50,23 @@ export class CadastroService {
   }
   
 
- 
-
-
-  search(cnpj) {
-    return this.http.get('https://appwebcondom.azurewebsites.net/api/0.2/empresa/buscarEmpresaPorCNPJ/' + cnpj);
+  search(id) {
+    const url = '/api/funcionarios/'+id;
+    this.http.put(url, this.httpOptions).subscribe(
+          (data : any) => {
+              console.log(data);
+              console.log(data.data.id);
+              console.log(data.data.nome);
+              console.log(data.data.email);
+          },
+          (err: HttpErrorResponse) => {
+              if (err.error instanceof Error) {
+                  console.log('Client-side error occured. '+err.error);
+              } else {
+                  console.log('Server-side error occured.');
+              }
+          }
+      );
   }
 
   // save(params) {

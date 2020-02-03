@@ -5,10 +5,16 @@ import { AuthService } from '../../auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as cep from 'cep-promise'
 
-export interface DialogData {
- nome: any
-, email : any
-, valorHora : any
+export interface FuncionarioData {
+  data: any
+, id: any
+, nome: any
+, email: any
+, valorHora: any
+, qtdHorasAlmoco: any 
+, qtdHorasTrabalhoDia: any
+, senha: any
+, errors: any
 }
 
 @Component({
@@ -46,48 +52,25 @@ export class FuncionarioComponent implements OnInit {
 
   searchFuncionario(){
     if (this.search && this.search != ''){
-      this.cadastroService.search(this.search)
-      .subscribe((data) => 
-        {
-          if (data)
-            this.data = data
-          else  
-          this._snackBar.open('Funcionário não encontrado =(', null, {
-            duration: 3000,
-          });
-        }  ,
-      error => {
-        this._snackBar.open('Funcionário não encontrado =(', null, {
-          duration: 3000,
-        });
-      }
-        
-      ); 
+     this.data = this.cadastroService.search(this.search);
+      
     } else {
       this.data = {};
     }
       
   }
 
-  editarEmpresa(){
-    localStorage.setItem("refresh", "false");
+  editarFuncionario(){
+    //localStorage.setItem("refresh", "false");
     this.dialog.open(DialogDataExampleFunc, {
       data: {
-        id : this.data.id
-        , razaoSocial: this.data.razaoSocial
-        , nomeFantasia : this.data.nomeFantasia
-        , cnpj : this.data.cnpj
-        , ie : this.data.ie
-        , eMail : this.data.eMail
-        , telefone : this.data.telefone
-        , cep : this.data.cep
-        , logradouro : this.data.logradouro
-        , numero : this.data.numero
-        , bairro : this.data.bairro
-        , complemento : this.data.complemento
-        , cidade : this.data.cidade
-        , uf : this.data.uf
-        , edicao : true
+          id : this.data.id
+         ,nome : this.data.nome
+         ,email: this.data.email
+         ,valorHora: this.data.valorHora
+         ,qtdHorasAlmoco: this.data.qtdHorasAlmoco
+         ,qtdHorasTrabalhoDia: this.data.qtdHorasTrabalhoDia
+         ,senha: this.data.senha
       }
     })
     .afterClosed().subscribe(result => {
@@ -127,11 +110,11 @@ export class FuncionarioComponent implements OnInit {
   providers:  [ CadastroService ]
 })
 export class DialogDataExampleFunc {
-  constructor( private dialogRef: MatDialogRef<DialogDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: DialogData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
+  constructor( private dialogRef: MatDialogRef<DialogDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
 
 
   saveFuncionario() {
-    this.cadastroService.saveFuncionario2();
+    this.cadastroService.saveFuncionario();
         this.dialogRef.close();
         this._snackBar.open('Funcionário salva com sucesso!', null, {
           duration: 3000,
@@ -174,7 +157,7 @@ export class DialogDataExampleFunc {
   providers:  [ CadastroService ]
 })
 export class DialogConfirmationDataExampleFunc {
-  constructor( private dialogRef: MatDialogRef<DialogConfirmationDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: DialogData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
+  constructor( private dialogRef: MatDialogRef<DialogConfirmationDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
   
 
   delete() {
