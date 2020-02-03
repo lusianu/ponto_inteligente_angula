@@ -4,6 +4,7 @@ import { CadastroService } from '../cadastro.service';
 import { AuthService } from '../../auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as cep from 'cep-promise'
+import { FuncionarioDTO } from './funcionarioDTO';
 
 export interface FuncionarioData {
   data: any
@@ -20,7 +21,8 @@ export interface FuncionarioData {
 @Component({
   selector: 'app-funcionario',
   templateUrl: './funcionario.component.html',
-  styleUrls: ['../../app.component.css','./funcionario.component.css']
+  styleUrls: ['../../app.component.css','./funcionario.component.css'],
+  providers:  [ CadastroService ]
 })
 export class FuncionarioComponent implements OnInit {
   constructor(public dialog: MatDialog, private cadastroService : CadastroService, private _snackBar: MatSnackBar, private authService: AuthService) { }
@@ -50,15 +52,44 @@ export class FuncionarioComponent implements OnInit {
     });
   }
 
+
   searchFuncionario(){
     if (this.search && this.search != ''){
-     this.data = this.cadastroService.search(this.search);
-      
-    } else {
-      this.data = {};
+      this.cadastroService.getFuncionarioByCPF(this.search).subscribe((func: FuncionarioDTO) => {
+        console.log(func);  
+        this.data = func;
+        });
     }
       
   }
+
+
+  // searchFuncionario2(){
+  //   if (this.search && this.search != ''){
+  //     this.cadastroService.buscarFuncionario(this.search) 
+  //     .subscribe((data: any) => 
+  //         {
+  //           if (data){
+  //             this.data = data.data;
+  //             this.editarFuncionario();
+  //           } else { 
+  //             this._snackBar.open('Funcionario não encontrada =(', null, {
+  //               duration: 3000,
+  //             });
+  //           }
+  //         }  ,
+  //       error  => {
+  //         this._snackBar.open('Funcionario não encontrada =(', null, {
+  //           duration: 3000,
+  //         });
+  //       }
+          
+  //       ); 
+  //   } else {
+  //     this.data = {};
+  //   }
+      
+  // }
 
   editarFuncionario(){
     //localStorage.setItem("refresh", "false");
@@ -113,13 +144,14 @@ export class DialogDataExampleFunc {
   constructor( private dialogRef: MatDialogRef<DialogDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
 
 
-  saveFuncionario() {
-    this.cadastroService.saveFuncionario();
-        this.dialogRef.close();
-        this._snackBar.open('Funcionário salva com sucesso!', null, {
-          duration: 3000,
-          }
-        );
+  // saveFuncionario() {
+  //   //this.cadastroService.chamarAPI('/api/empresas/cnpj/00000000000191','GET',null);
+  //   this.cadastroService.chamarAPI('/api/funcionarios/1','PUT',null);
+  //       this.dialogRef.close();
+  //       this._snackBar.open('Funcionário salva com sucesso!', null, {
+  //         duration: 3000,
+  //         }
+  //       );
 
     // this.cadastroService.saveFuncionario(this.data)
     //   .subscribe( data  =>  {
@@ -131,7 +163,7 @@ export class DialogDataExampleFunc {
     //     }
     //   } 
     //   );
-    }
+    //}
 
     // cepChanged(newObj){
     //   if  ( newObj && newObj.length == 8) {

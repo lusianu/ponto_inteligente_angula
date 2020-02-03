@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpErrorResponse} from '@angular/common/http';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { retry, catchError } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, throwError } from 'rxjs';
+import { FuncionarioDTO } from '../cadastro/funcionario/funcionarioDTO';
 import { Data } from '@angular/router';
 import { LocationStrategy } from '@angular/common';
 
@@ -9,7 +12,7 @@ import { LocationStrategy } from '@angular/common';
 })
 export class CadastroService {
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar) { }
+  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
     headers_object = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -19,92 +22,63 @@ export class CadastroService {
     httpOptions = {
       headers: this.headers_object
     };
+
+    urlFuncionario = 'api/funcionarios'
    
-  saveFuncionario(){
-
-    interface Data {
-      data : any,
-      cnpj: string,
-      id: BigInteger,
-      razaoSocial: string,
-      erros: string[]
-   }
-
-    const url = '/api/empresas/cnpj/00000000000191';
-
-    this.http.get(url, this.httpOptions).subscribe(
-        (data : any) => {
-            console.log(data);
-            console.log(data.data.id);
-            console.log(data.data.cnpj);
-            console.log(data.data.razaoSocial);
-        },
-        (err: HttpErrorResponse) => {
-            if (err.error instanceof Error) {
-                console.log('Client-side error occured. '+err.error);
-            } else {
-                console.log('Server-side error occured.');
-            }
-        }
-    );
+  getFuncionarios(): Observable<FuncionarioDTO[]> {
+    return this.httpClient.get<FuncionarioDTO[]>(this.urlFuncionario,this.httpOptions)
+      .pipe(
+        retry(2),
+        catchError(this.handleError))
   }
+
+  getFuncionarioByCPF(cpf: String): Observable<FuncionarioDTO> {
+    return this.httpClient.get<FuncionarioDTO>(this.urlFuncionario + '/cpf/' + cpf, this.httpOptions)
+      .pipe(
+        retry(2),
+        catchError(this.handleError)
+      )
+  }
+
+  // // salva um carro
+  // saveCar(car: Car): Observable<Car> {
+  //   return this.httpClient.post<Car>(this.url, JSON.stringify(car), this.httpOptions)
+  //     .pipe(
+  //       retry(2),
+  //       catchError(this.handleError)
+  //     )
+  // }
+
+  // // utualiza um carro
+  // updateCar(car: Car): Observable<Car> {
+  //   return this.httpClient.put<Car>(this.url + '/' + car.id, JSON.stringify(car), this.httpOptions)
+  //     .pipe(
+  //       retry(1),
+  //       catchError(this.handleError)
+  //     )
+  // }
+
+  // // deleta um carro
+  // deleteCar(car: Car) {
+  //   return this.httpClient.delete<Car>(this.url + '/' + car.id, this.httpOptions)
+  //     .pipe(
+  //       retry(1),
+  //       catchError(this.handleError)
+  //     )
+  // }
+
+  // Manipulação de erros
+  handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Erro ocorreu no lado do client
+      errorMessage = error.error.message;
+    } else {
+      // Erro ocorreu no lado do servidor
+      errorMessage = `Código do erro: ${error.status}, ` + `menssagem: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
+  };
   
-
-  search(id) {
-    const url = '/api/funcionarios/'+id;
-    this.http.put(url, this.httpOptions).subscribe(
-          (data : any) => {
-              console.log(data);
-              console.log(data.data.id);
-              console.log(data.data.nome);
-              console.log(data.data.email);
-          },
-          (err: HttpErrorResponse) => {
-              if (err.error instanceof Error) {
-                  console.log('Client-side error occured. '+err.error);
-              } else {
-                  console.log('Server-side error occured.');
-              }
-          }
-      );
-  }
-
-  // save(params) {
-  //   let empresa = JSON.parse(localStorage.getItem('funcionario')).idEmpresa;
-  //   params.idEmpresa = empresa;
-  //   if (!params.edicao) 
-  //     return this.http.post('https://appwebcondom.azurewebsites.net/api/0.2/empresa/adicionar', params);
-  //   if (params.edicao) 
-  //     return this.http.put('https://appwebcondom.azurewebsites.net/api/0.2/empresa/atualizar', params);
-  // }
-
-  // search(cnpj) {
-  //   return this.http.get('https://appwebcondom.azurewebsites.net/api/0.2/empresa/buscarEmpresaPorCNPJ/' + cnpj);
-  // }
-
-  // delete(id){
-  //   return this.http.delete('https://appwebcondom.azurewebsites.net/api/0.2/empresa/remover/' + id);
-  // }
-
-  // saveUsuario(params) {
-  //   let empresa = JSON.parse(localStorage.getItem('funcionario')).idEmpresa;
-  //   params.idEmpresa = params.empresa;
-  //   params.ativo = true;
-  //   if (!params.edicao) 
-  //     return this.http.post('https://appwebcondom.azurewebsites.net/api/0.2/usuario/adicionar', params);
-  //   if (params.edicao) 
-  //     return this.http.put('https://appwebcondom.azurewebsites.net/api/0.2/usuario/atualizar', params);
-  // }
-
-  // searchUsuario(username) {
-  //   return this.http.get('https://appwebcondom.azurewebsites.net/api/0.2/usuario/buscarUsuarioLogin/' + username);
-  // }
-
-  // deleteUsuario(id){
-  //   return this.http.delete('https://appwebcondom.azurewebsites.net/api/0.2/usuario/remover/' + id);
-  // }
-
-  // listarEmpresas(){
-  //   return this.http.get('https://appwebcondom.azurewebsites.net/api/0.2/empresa/buscarEmpresasAtivas');
-  // }
 }

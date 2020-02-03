@@ -1,6 +1,6 @@
 {
     "/api/*": {
-      "target": "https://controle-ponto-inteligente-api.herokuapp.com/api",
+     "target": "http://localhost:8080/api",
       "secure": false,
       "logLevel": "debug",
       "changeOrigin": true,
@@ -8,4 +8,4 @@
         "^/api": ""
       }
     }
-  }
+}
