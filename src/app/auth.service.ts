@@ -57,8 +57,8 @@ export class AuthService {
        erros: string[]
     }
   
-    //this.http.post('https://controle-ponto-inteligente-api.herokuapp.com/auth',login , this.httpOptions).subscribe((data:Data
-    this.http.post('http://localhost:8080/auth',login , this.httpOptions).subscribe((data:Data
+    this.http.post('https://controle-ponto-inteligente-api.herokuapp.com/auth',login , this.httpOptions).subscribe((data:Data
+    //this.http.post('http://localhost:8080/auth',login , this.httpOptions).subscribe((data:Data
     ) =>  {
       localStorage.setItem('token', data.data.token);
       this._router.navigate(['/home']);

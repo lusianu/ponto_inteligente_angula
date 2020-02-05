@@ -32,8 +32,8 @@ export class CadastroService {
         catchError(this.handleError))
   }
 
-  getFuncionarioByCPF(cpf: String): Observable<FuncionarioDTO> {
-    return this.httpClient.get<FuncionarioDTO>(this.urlFuncionario + '/cpf/' + cpf, this.httpOptions)
+  getFuncionarioByCPF(cpf: String): any {
+    return this.httpClient.get(this.urlFuncionario + '/cpf/' + cpf, this.httpOptions)
       .pipe(
         retry(2),
         catchError(this.handleError)

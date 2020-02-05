@@ -36,6 +36,15 @@
         <mat-form-field>
           <input matInput readonly placeholder="CPF"  [(ngModel)]="data.cpf" >
         </mat-form-field>
+        <mat-form-field>
+          <input matInput readonly placeholder="Valor Hora"  [(ngModel)]="data.valorHora" >
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput readonly placeholder="Qtde Horas de Almoço"  [(ngModel)]="data.qtdHorasAlmoco" >
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput readonly placeholder="Qtde Horas de Trabalho dia"  [(ngModel)]="data.qtdHorasTrabalhoDia" >
+        </mat-form-field>
   </mat-card-content>
   <mat-card-actions>
     <button (click)="editarFuncionario()" mat-button>EDITAR</button>

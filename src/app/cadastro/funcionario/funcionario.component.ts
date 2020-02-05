@@ -1,33 +1,20 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';  
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';  
 import { CadastroService } from '../cadastro.service';
 import { AuthService } from '../../auth.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import * as cep from 'cep-promise'
+import { MatSnackBar} from '@angular/material/snack-bar';
 import { FuncionarioDTO } from './funcionarioDTO';
 
-export interface FuncionarioData {
-  data: any
-, id: any
-, nome: any
-, email: any
-, valorHora: any
-, qtdHorasAlmoco: any 
-, qtdHorasTrabalhoDia: any
-, senha: any
-, errors: any
-}
+
 
 @Component({
   selector: 'app-funcionario',
   templateUrl: './funcionario.component.html',
-  styleUrls: ['../../app.component.css','./funcionario.component.css'],
-  providers:  [ CadastroService ]
+  styleUrls: ['../../app.component.css','./funcionario.component.css']
 })
 export class FuncionarioComponent implements OnInit {
-  constructor(public dialog: MatDialog, private cadastroService : CadastroService, private _snackBar: MatSnackBar, private authService: AuthService) { }
-  data : any;
-
+  constructor(public dialog: MatDialog, private cadastroService : CadastroService,  private _snackBar: MatSnackBar, private authService: AuthService) { }
+  data : FuncionarioDTO;
   search : string;
 
   ngOnInit() {
@@ -45,19 +32,23 @@ export class FuncionarioComponent implements OnInit {
     localStorage.setItem("refresh", "false");
     this.dialog.open(DialogDataExampleFunc, {
       data: {
-         nome: null
-        , email : null
-        , valorHora : null
-      }
+        nome : null
+       ,email: null
+       ,cpf : null
+       ,valorHora: null
+       ,qtdHorasAlmoco: null
+       ,qtdHorasTrabalhoDia: null
+       ,senha: null
+    }
     });
   }
 
 
   searchFuncionario(){
     if (this.search && this.search != ''){
-      this.cadastroService.getFuncionarioByCPF(this.search).subscribe((func: FuncionarioDTO) => {
-        console.log(func);  
-        this.data = func;
+      this.cadastroService.getFuncionarioByCPF(this.search).subscribe((retorno: any) => {
+        this.data = retorno.data;
+        this.editarFuncionario();
         });
     }
       
@@ -93,10 +84,12 @@ export class FuncionarioComponent implements OnInit {
 
   editarFuncionario(){
     //localStorage.setItem("refresh", "false");
+    console.log(this.data)
     this.dialog.open(DialogDataExampleFunc, {
       data: {
           id : this.data.id
          ,nome : this.data.nome
+         ,cpf : this.data.cpf
          ,email: this.data.email
          ,valorHora: this.data.valorHora
          ,qtdHorasAlmoco: this.data.qtdHorasAlmoco
@@ -119,9 +112,6 @@ export class FuncionarioComponent implements OnInit {
     this.dialog.open(DialogConfirmationDataExampleFunc, {
       data: {
         id : this.data.id
-        , razaoSocial: this.data.razaoSocial
-        , nomeFantasia : this.data.nomeFantasia
-        , cnpj : this.data.cnpj
 
       }
     })
@@ -141,7 +131,7 @@ export class FuncionarioComponent implements OnInit {
   providers:  [ CadastroService ]
 })
 export class DialogDataExampleFunc {
-  constructor( private dialogRef: MatDialogRef<DialogDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
+  constructor( private dialogRef: MatDialogRef<DialogDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioDTO,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
 
 
   // saveFuncionario() {
@@ -189,7 +179,7 @@ export class DialogDataExampleFunc {
   providers:  [ CadastroService ]
 })
 export class DialogConfirmationDataExampleFunc {
-  constructor( private dialogRef: MatDialogRef<DialogConfirmationDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioData,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
+  constructor( private dialogRef: MatDialogRef<DialogConfirmationDataExampleFunc>, @Inject(MAT_DIALOG_DATA) public data: FuncionarioDTO,  private cadastroService : CadastroService, private _snackBar: MatSnackBar) {}
   
 
   delete() {
